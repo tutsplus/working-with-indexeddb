@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Demo 5</title>
+	</head>
+	<body>
+		
+	<script>
+    var idbSupported = false;
+    var db;
+    
+    document.addEventListener("DOMContentLoaded", function(){
+	
+        if("indexedDB" in window) {
+            idbSupported = true;
+        }
+        
+        if(idbSupported) {
+            var openRequest = indexedDB.open("test_v2",2);
+
+            openRequest.onupgradeneeded = function(e) {
+                console.log("running onupgradeneeded");
+                var thisDB = e.target.result;
+                
+                if(!thisDB.objectStoreNames.contains("firstOS")) {
+                    thisDB.createObjectStore("firstOS");
+                }
+
+                if(!thisDB.objectStoreNames.contains("secondOS")) {
+                    thisDB.createObjectStore("secondOS");
+                }
+
+            }
+            
+            openRequest.onsuccess = function(e) {
+                console.log("Success!");
+                db = e.target.result;
+            }
+        
+            openRequest.onerror = function(e) {
+                console.log("Error");
+                console.dir(e);
+            }
+            
+        }
+	
+    },false);
+		
+	</script>	
+	</body>
+</html>
